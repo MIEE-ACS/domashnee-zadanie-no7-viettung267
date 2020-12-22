@@ -3,7 +3,11 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="MainWindow" Height="681.469" Width="920.655" KeyDown="Window_KeyDown">
     <Grid Visibility="Visible">
-        <Button Content="Start" Height="23" HorizontalAlignment="Left" Margin="12,12,0,0" Name="button1" VerticalAlignment="Top" Width="75" Click="button1_Click" />
+        <Button Content="" Height="70" HorizontalAlignment="Left" Margin="732,223,0,0" Name="button1" VerticalAlignment="Top" Width="144" Click="button1_Click" >
+            <Button.Background>
+                <ImageBrush ImageSource="Resources/start.png"/>
+            </Button.Background>
+        </Button>
 
         <Label Content="Score" Height="49" HorizontalAlignment="Left" Margin="718,0,0,0" Name="label1" VerticalAlignment="Top" FontFamily="Showcard Gothic" FontSize="30" Width="124" />
         <Label Content="0" Height="50" HorizontalAlignment="Left" Margin="718,54,0,0" Name="lblScore" VerticalAlignment="Top" Width="158" FontFamily="Showcard Gothic" FontSize="30" />
@@ -14,5 +18,6 @@
         <TextBlock Height="300" Name="tbGameOver" Text="   Game Over!" Width="300" FontFamily="Levenim MT" FontSize="36" Background="#79483232" Foreground="#FFFC0000" Visibility="Hidden" Margin="111,12,164,12" />
         <ProgressBar HorizontalAlignment="Left" Height="24" Margin="111,617,0,0" VerticalAlignment="Top" Width="498" Value="60"/>
         <Label x:Name="label" Content="х 4" HorizontalAlignment="Left" Margin="614,610,0,0" VerticalAlignment="Top" Width="97" FontFamily="LCDMono2" FontSize="30"/>
+        <Label x:Name="check" Content="" HorizontalAlignment="Left" Margin="44,207,0,0" VerticalAlignment="Top"/>
     </Grid>
 </Window>
