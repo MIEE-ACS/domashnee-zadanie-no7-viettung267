@@ -30,14 +30,20 @@ namespace Snake
         Apple apple;
         //количество очков
         int score;
-        //таймер по которому 
+        //таймер по которому
         DispatcherTimer moveTimer;
+
+        Entity start;
+
+        Random r;
+        int timebomb;//this is time, when bomb appear
+        Bomb bomb;
         
         //конструктор формы, выполняется при запуске программы
         public MainWindow()
         {
             InitializeComponent();
-            
+
             snake = new List<PositionedEntity>();
             //создаем поле 300х300 пикселей
             field = new Entity(600, 600, "pack://application:,,,/Resources/snake.png");
@@ -62,10 +68,13 @@ namespace Snake
             //обновляем положение яблока
             Canvas.SetTop(apple.image, apple.y);
             Canvas.SetLeft(apple.image, apple.x);
-            
+
             //обновляем количество очков
             lblScore.Content = String.Format("{0}000", score);
         }
+
+
+
 
         //обработчик тика таймера. Все движение происходит здесь
         void moveTimer_Tick(object sender, EventArgs e)
@@ -110,6 +119,44 @@ namespace Snake
                 canvas1.Children.Add(part.image);
                 snake.Add(part);
             }
+            
+            // check timebomb and score
+            // case equal
+            if (timebomb==score)
+            {
+                canvas1.Children.Add(bomb.image);//add image bomb in Cavas
+                bomb.move2();//random the position of bomb
+                //check postion of bomb with position of apple
+                while (bomb.x==apple.x && bomb.y==apple.y)
+                {
+                    bomb.move2();
+                }
+                timebomb--;
+                //set position of bomb in Cavas
+                Canvas.SetTop(bomb.image, bomb.y);
+                Canvas.SetLeft(bomb.image, bomb.x);
+            }
+            //case the snake eats bomb
+            if (head.x==bomb.x && head.y==bomb.y)
+            {
+                //bomb dispear
+                canvas1.Children.Remove(bomb.image);
+                //minus points
+                score--;
+                //hide bomb and set location, in which the snake can't go there
+                bomb.x = 0;
+                bomb.y = 0;
+                //random bomb
+                timebomb = r.Next(3, 5) + score;
+            }
+            //case the snake skip bomb
+            if (score>(timebomb+1))
+            {
+                canvas1.Children.Remove(bomb.image);
+                bomb.x = 0;
+                bomb.y = 0;
+                timebomb = r.Next(3, 5) + score;
+            }
             //перерисовываем экран
             UpdateField();
         }
@@ -133,7 +180,6 @@ namespace Snake
                     break;
             }
         }
-
         // Обработчик нажатия кнопки "Start"
         private void button1_Click(object sender, RoutedEventArgs e)
         {
@@ -160,6 +206,12 @@ namespace Snake
             moveTimer.Start();
             UpdateField();
 
+            //random timebomb
+            r = new Random();
+            timebomb = r.Next(3, 5);
+            bomb = new Bomb(snake);
+            bomb.x = 0;
+            bomb.y = 0;
         }
         
         public class Entity
@@ -200,6 +252,7 @@ namespace Snake
             }
 
             public virtual void move() { }
+            public virtual void move2() { }
 
             public int x
             {
@@ -223,6 +276,23 @@ namespace Snake
                 {
                     m_y = value;
                 }
+            }
+        }
+        //class Bomb 
+        public class Bomb : PositionedEntity
+        {
+            List<PositionedEntity> m;
+            public Bomb(List<PositionedEntity> s)
+                : base(0, 0, 40, 40, "pack://application:,,,/Resources/bomb.png")
+            {
+                m = s;
+                move2();
+            }
+            public override void move2()
+            {
+                Random rand = new Random();
+                x = rand.Next(13)* 40 + 40;
+                y = rand.Next(13) * 40 + 40;
             }
         }
 
@@ -258,6 +328,7 @@ namespace Snake
 
             }
         }
+
 
         public class Head : PositionedEntity
         {
